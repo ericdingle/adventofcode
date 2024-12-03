@@ -1,6 +1,6 @@
 f = open('input.txt', 'r')
 
-lhs, rhs = zip(*[map(int, line.split('   ')) for line in f])
+lhs, rhs = zip(*[map(int, line.split()) for line in f])
 
 lhs, rhs = sorted(lhs), sorted(rhs)
 
