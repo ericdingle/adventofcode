@@ -7,7 +7,7 @@ width, height = len(data[0]), len(data)
 def score(r, c, distinct):
   i = data[r][c]
   if i == 9:
-    return {(r, c)} if distinct else {(r, c, time())}
+    return {(r, c, time())} if distinct else {(r, c)}
 
   s = set()
   for r2, c2 in ((r+1, c), (r-1, c), (r, c+1), (r, c-1)):
@@ -23,5 +23,5 @@ def run(distinct):
         s += len(score(r, c, distinct))
   return s
 
-print(run(True))
 print(run(False))
+print(run(True))
