@@ -12,20 +12,30 @@ def get_score(filename):
 
   start = next(k for k, v in grid.items() if v == 'S')
 
-  visited = {start}
-  h = []
-  heappush(h, (0, start, (0, 1)))  # score, pos, facing
+  heap = []
+  heappush(heap, (0, start, (0, 1)))  # score, pos, facing
+  visited = {(start, (0, 1)): (1, {start})}  # (pos, facing): (min_score, set(tiles))
 
-  while len(h) != 0:
-    score, pos, facing = heappop(h)
+  while len(heap) != 0:
+    score, pos, facing = heappop(heap)
+    tiles = visited[(pos, facing)][1]
+
     for dir in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-      neighbor = add(pos, dir)
-      if not neighbor in visited and grid[neighbor] != '#':
-        visited.add(neighbor)
-        score2 = score + 1 + (0 if dir == facing else 1000)
-        if grid[neighbor] == 'E':
-          return score2
-        heappush(h, (score2, neighbor, dir))
+      new_pos = add(pos, dir)
+      new_score = score + 1 + (0 if dir == facing else 1000)
+
+      if (new_pos, dir) in visited:
+        min_score, old_tiles = visited[(new_pos, dir)]
+        if new_score == min_score:
+          visited[(new_pos, dir)] = (min_score, old_tiles | tiles)
+      elif grid[new_pos] != '#':
+        visited[(new_pos, dir)] = (new_score, tiles | {new_pos})
+        if grid[new_pos] != 'E':
+          heappush(heap, (new_score, new_pos, dir))
+
+  end = next(k for k, v in grid.items() if v == 'E')
+  score, tiles = sorted(v for (pos, _), v in visited.items() if pos == end)[0]
+  return score, len(tiles)
 
 print(get_score('input.txt'))
 print(get_score('input2.txt'))
