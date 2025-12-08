@@ -15,7 +15,7 @@ for r in range(1, h+1):
       total += 1
 print(total)
 
-# Part 1.
+# Part 2.
 data = open(sys.argv[1], 'r').read().splitlines()
 w, h = len(data[0]), len(data)
 
